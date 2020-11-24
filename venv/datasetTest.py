@@ -17,6 +17,9 @@ from imageDataset import img_dataset
 from imageModel import Net
 import numpy as np
 from torch.autograd import Variable
+from torchvision import transforms, datasets, models
+import torch
+from torch.autograd import Variable
 
 
 class word2vec_datasetTest(Dataset):
@@ -70,32 +73,20 @@ class word2vec_datasetTest(Dataset):
 
         sent_list_tokenized_filtered, vocab, word_to_ix, ix_to_word = self.gather_word_freqs(
             sent_list_tokenized_filtered, subsampling, sampling_rate)
-        for word in vocab:
-            if vocab[word] >= 500:
-                print(word)
-        # tokenized_corpus = self.tokenize_corpus(data_source)
-        # vocab = {}
-        # ix_to_word = {}
-        # word_to_ix = {}
-        # for sentence in tokenized_corpus:
-        #     for token in sentence:
-        #         if token not in vocab:
-        #             vocab[token] = 0
-        #             ix_to_word[len(word_to_ix)] = token
-        #             word_to_ix[token] = len(word_to_ix)
-        #         vocab[token] += 1.0  # count of the word stored in a dict
+
         images = img_dataset(vocab)
         word_2_img = images.word_to_img
-        imgModel = Net()
-        outputs = imgModel(images.inputs)
-        training_data = self.gather_training_data(sent_list_tokenized_filtered, word_to_ix, ix_to_word, context_size, outputs, word_2_img, k)
+        #img_model = Net()
+        #outputs = img_model(images.inputs)
+        training_data = self.gather_training_data(sent_list_tokenized_filtered, word_to_ix, ix_to_word, context_size, images.inputs, word_2_img, k)
         print("return load data")
         return vocab, word_to_ix, ix_to_word, training_data, images, word_2_img
 
     def gather_training_data(self, tokenized_corpus, word_to_ix, ix_to_word, context_size, images, word_2_img, k):
         idx_pairs = []
         # for each sentence
-        for sentence in tokenized_corpus:
+        for i, sentence in enumerate(tokenized_corpus):
+            print("Sentence ", i, " out of: ", len(tokenized_corpus))
             indices = [word_to_ix[word] for word in sentence]
             # for each word, threated as center word
             for center_word_pos in range(len(indices)):
