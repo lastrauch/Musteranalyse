@@ -21,14 +21,13 @@ import torch.optim as optim
 
 class img_dataset(Dataset):
     def __init__(self, vocab):
-        train, test, classes, inputs, class_names, img_vocab, word_to_img = self.load_data(vocab)
+        train, test, classes, inputs, class_names, word_to_img = self.load_data(vocab)
 
         self.train = train
         self.test = test
         self.classes = classes
         self.inputs = inputs
         self.class_names = class_names
-        self.img_vocab = img_vocab
         self.word_to_img = word_to_img
 
     def __len__(self):
@@ -36,13 +35,12 @@ class img_dataset(Dataset):
 
     def load_data(self, vocab):
         train, test, classes = self.transforming()
-        outputs = self.train_model(train)
+        model = self.train_model(train)
         inputs, class_names = next(iter(train))
-        #img_vocab = self. img_vocab(vocab, class_names, inputs, classes)
-        #img_vocab = self.img_vocab(vocab, class_names, outputs, classes)
+        outputs = model(inputs.cuda())
         word_to_img = self.map_word_to_image(class_names, vocab, classes)
 
-        return train, test, classes, outputs, class_names, img_vocab, word_to_img
+        return train, test, classes, outputs, class_names, word_to_img
 
     def transforming(self):
         transform = transforms.Compose([
@@ -52,10 +50,10 @@ class img_dataset(Dataset):
             transforms.Normalize([0.485, 0.456, 0.406],
                                  [0.229, 0.224, 0.225])
         ])
-        trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform)
-        trainloader = torch.utils.data.DataLoader(trainset, batch_size=1700, shuffle=True, num_workers=0)
-        testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform)
-        testloader = torch.utils.data.DataLoader(trainset, batch_size=1700, shuffle=True, num_workers=0)
+        trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=2)
+        testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+        testloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=2)
         class_names = trainset.classes
 
         return trainloader, testloader, class_names
@@ -122,8 +120,6 @@ class img_dataset(Dataset):
             model.train()
             print(running_loss)
         print('Finished Training')
-        return model(self.inputs)
-
-
+        return model
 
 
