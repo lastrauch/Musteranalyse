@@ -21,7 +21,7 @@ if DATA_SOURCE=='gensim':
     SAMPLING_RATE         = 0.001
     NEGATIVE_SAMPLES      = 20 # set it to 0 if you don't want to use negative samplings
 
-    EMBEDDING_DIM         = 70
+    EMBEDDING_DIM         = 128
     LR                    = 0.001
 
     if FRACTION_DATA == 1:

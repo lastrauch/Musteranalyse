@@ -20,6 +20,7 @@ from torch.autograd import Variable
 from torchvision import transforms, datasets, models
 import torch
 from torch.autograd import Variable
+TRAINING_TEXT = "corpus.txt"
 
 
 class word2vec_datasetTest(Dataset):
@@ -54,7 +55,14 @@ class word2vec_datasetTest(Dataset):
         if data_source == 'gensim':
             import gensim.downloader as api
             dataset = api.load("text8")
-            data = [d for d in dataset][:int(fraction_data * len([d_ for d_ in dataset]))]
+
+            with open(TRAINING_TEXT, 'w') as outfile:
+                for idx, doc in enumerate(dataset):
+                    if idx == 100:
+                        break
+                    outfile.write(" ".join(doc) + "\n")
+            data = [d for d in TRAINING_TEXT][:int(fraction_data * len([d_ for d_ in TRAINING_TEXT]))]
+            #data = [d for d in dataset][:int(fraction_data * len([d_ for d_ in dataset]))]
             print(f'fraction of data taken: {fraction_data}/1')
 
             sents = []
@@ -73,7 +81,6 @@ class word2vec_datasetTest(Dataset):
 
         sent_list_tokenized_filtered, vocab, word_to_ix, ix_to_word = self.gather_word_freqs(
             sent_list_tokenized_filtered, subsampling, sampling_rate)
-
         images = img_dataset(vocab)
         word_2_img = images.word_to_img
         #img_model = Net()

@@ -18,6 +18,8 @@ import torchvision
 from torchvision import transforms, datasets, models
 import torch.nn as nn
 import torch.optim as optim
+import os
+import pickle
 
 class img_dataset(Dataset):
     def __init__(self, vocab):
@@ -35,9 +37,15 @@ class img_dataset(Dataset):
 
     def load_data(self, vocab):
         train, test, classes = self.transforming()
-        model = self.train_model(train)
+        if os.path.exists("/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"):
+            PATH = "/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"
+            device = torch.device('cpu')
+            model = models.resnet34(pretrained=True)
+            model.load_state_dict(torch.load(PATH, map_location=device))
+        else:
+            model = self.train_model(train)
         inputs, class_names = next(iter(train))
-        outputs = model(inputs.cuda())
+        outputs = model(inputs)
         word_to_img = self.map_word_to_image(class_names, vocab, classes)
 
         return train, test, classes, outputs, class_names, word_to_img
@@ -50,10 +58,10 @@ class img_dataset(Dataset):
             transforms.Normalize([0.485, 0.456, 0.406],
                                  [0.229, 0.224, 0.225])
         ])
-        trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
-        trainloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=2)
-        testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
-        testloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=2)
+        trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=6000, shuffle=True, num_workers=0)
+        testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform)
+        testloader = torch.utils.data.DataLoader(trainset, batch_size=6000, shuffle=True, num_workers=0)
         class_names = trainset.classes
 
         return trainloader, testloader, class_names
@@ -100,7 +108,7 @@ class img_dataset(Dataset):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-        for epoch in range(1):
+        for epoch in range(15):
             print("epoch: ", epoch)
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
@@ -117,8 +125,23 @@ class img_dataset(Dataset):
                 optimizer.step()
 
                 running_loss += loss.item()
-            model.train()
-            print(running_loss)
+                print(running_loss)
+        if not os.path.exists("/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"):
+            PATH = "/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"
+            # ======== pickle dump =========
+            print('\ndumping pickle...')
+            outfile = open(PATH, 'wb')
+            pickle.dump(model, outfile)
+            outfile.close()
+            print('pickle dumped\n')
+
+            # else:
+            #     # ===== pickle load ==========
+            #     print('\nloading pickle...')
+            #     infile = open(PREPROCESSED_DATA_PATH, 'rb')
+            #     train_dataset = pickle.load(infile)
+            #     infile.close()
+            #     print('pickle loaded\n')
         print('Finished Training')
         return model
 
