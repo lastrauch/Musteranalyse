@@ -52,7 +52,13 @@ class word2vec_datasetTest(Dataset):
 
     def load_data(self, data_source, context_size, fraction_data, subsampling, sampling_rate, k):
         stop_words = set(stopwords.words('english'))
-        if data_source == 'gensim':
+        if data_source == 'toy':
+            sents = [
+                    'word1 word2 word3 word4 word5',
+                    'word6 word7 word8 word9 word10',
+                    'word11 word12 word13 word14 word15'
+                    ]
+        elif data_source == 'gensim':
             import gensim.downloader as api
             dataset = api.load("text8")
 

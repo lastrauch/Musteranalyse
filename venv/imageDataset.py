@@ -59,9 +59,9 @@ class img_dataset(Dataset):
                                  [0.229, 0.224, 0.225])
         ])
         trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform)
-        trainloader = torch.utils.data.DataLoader(trainset, batch_size=6000, shuffle=True, num_workers=0)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0)
         testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform)
-        testloader = torch.utils.data.DataLoader(trainset, batch_size=6000, shuffle=True, num_workers=0)
+        testloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0)
         class_names = trainset.classes
 
         return trainloader, testloader, class_names

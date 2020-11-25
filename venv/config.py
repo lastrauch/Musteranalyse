@@ -3,7 +3,8 @@ import os, torch
 DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 print('DEVICE: ', DEVICE)
 
-DATA_SOURCE           = 'gensim' # or 'toy'
+#DATA_SOURCE           = 'gensim' # or 'toy'
+DATA_SOURCE           = 'toy' # or 'toy'
 MODEL_ID              = DATA_SOURCE #'toy'# 'gensim'
 DISPLAY_BATCH_LOSS    = True
 
