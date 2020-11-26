@@ -14,7 +14,6 @@ from tqdm import tqdm
 lem = WordNetLemmatizer()
 import random
 from imageDataset import img_dataset
-from imageModel import Net
 import numpy as np
 from torch.autograd import Variable
 from torchvision import transforms, datasets, models
@@ -58,7 +57,7 @@ class word2vec_datasetTest(Dataset):
             dataset = api.load("text8")
             #data = [d for d in dataset][:int(fraction_data * len([d_ for d_ in dataset]))]
             #data = [d for d in dataset][:int(fraction_data * 1)]
-            data = [d for d in dataset][:int(5)]
+            data = [d for d in dataset][:int(40)]
             print(f'fraction of data taken: {fraction_data}/1')
 
             sents = []

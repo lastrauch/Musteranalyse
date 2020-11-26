@@ -27,7 +27,7 @@ if DATA_SOURCE=='gensim':
 
     if FRACTION_DATA == 1:
         #TEST_WORDS            = ['india', 'gold', 'football', 'cars', 'war', 'apple', 'music', 'helicopter']
-        TEST_WORDS = ['horse', 'dog', 'man', 'woman']
+        TEST_WORDS = ['horse', 'dog', 'man', 'woman', 'football', 'apple']
         TEST_WORDS_VIZ        = ['india', 'asia', 'guitar', 'piano', 'album', 'music', 'war', 'soldiers', 'helicopter']
     else:
         TEST_WORDS            = ['human', 'boy', 'office', 'woman']
@@ -36,4 +36,4 @@ if DATA_SOURCE=='gensim':
 PREPROCESSED_DATA_DIR  = os.path.join(MODEL_ID, 'preprocessed_data')
 PREPROCESSED_DATA_PATH = os.path.join(PREPROCESSED_DATA_DIR, 'preprocessed_data_' + MODEL_ID + '_' + str(FRACTION_DATA) + '.pickle')
 SUMMARY_DIR            = os.path.join(MODEL_ID, 'summary')
-MODEL_DIR              = os.path.join(MODEL_ID, 'models')
+MODEL_DIR              = os.path.join(MODEL_ID, 'models2')

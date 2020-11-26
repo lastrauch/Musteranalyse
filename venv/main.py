@@ -9,7 +9,6 @@ from datasetTest import word2vec_datasetTest
 from config import *
 from imageDataset import img_dataset
 from test import print_nearest_words
-from MappedDataset import MappedDataset
 
 
 # ======================================================================================================================
@@ -19,7 +18,7 @@ os.makedirs(MODEL_DIR)  # create MODEL_DIR
 # ======================================================================================================================
 
 # ======================================= make training data ===========================================================
-corpus = [
+test_corpus = [
     'cat is a female',
     'dog is male',
     'truck is for a man',
@@ -86,7 +85,6 @@ for epoch in tqdm(range(NUM_EPOCHS)):  # NUM_EPOCHS
         model.train()
 
         x_batch = x_batch.to(DEVICE)
-        #print("x_batch: ", len(x_batch))
         y_batch = y_batch.to(DEVICE)
         img = img.to(DEVICE)
 
@@ -101,13 +99,13 @@ for epoch in tqdm(range(NUM_EPOCHS)):  # NUM_EPOCHS
         if batch_idx % DISPLAY_EVERY_N_BATCH == 0 and DISPLAY_BATCH_LOSS:
             print(f'Batch: {batch_idx + 1}/{len(train_loader)}, Loss: {loss.item()}')
             # show 5 closest words to some test words
-            print_nearest_words(model, TEST_WORDS, word_to_ix, ix_to_word, top=2)
+            print_nearest_words(model, TEST_WORDS, word_to_ix, ix_to_word, top=5)
 
     # ========================== write embeddings every SAVE_EVERY_N_EPOCH epoch =======================================
-    #if epoch % SAVE_EVERY_N_EPOCH == 0:
-        #torch.save({'model_state_dict': model.state_dict(),
-                    #'losses': losses,
-                    #'word_to_ix': word_to_ix,
-                    #'ix_to_word': ix_to_word
-                    #},
-                   #'{}/model{}.pth'.format(MODEL_DIR, epoch))
+    if epoch % SAVE_EVERY_N_EPOCH == 0:
+        torch.save({'model_state_dict': model.state_dict(),
+                    'losses': losses,
+                    'word_to_ix': word_to_ix,
+                    'ix_to_word': ix_to_word
+                    },
+                   '{}/model{}.pth'.format(MODEL_DIR, epoch))
