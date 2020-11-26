@@ -28,8 +28,8 @@ corpus = [
     'woman is female',
 ]
 if not os.path.exists(PREPROCESSED_DATA_PATH):
-    #train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
-    train_dataset = word2vec_datasetTest(corpus, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+    train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+    #train_dataset = word2vec_datasetTest(corpus, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
 
     if not os.path.exists(PREPROCESSED_DATA_DIR):
         os.makedirs(PREPROCESSED_DATA_DIR)

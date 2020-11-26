@@ -3,8 +3,8 @@ import os, torch
 DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 print('DEVICE: ', DEVICE)
 
-#DATA_SOURCE           = 'gensim' # or 'toy'
-DATA_SOURCE           = 'toy' # or 'toy'
+DATA_SOURCE           = 'gensim' # or 'toy'
+#DATA_SOURCE           = 'toy' # or 'toy'
 MODEL_ID              = DATA_SOURCE #'toy'# 'gensim'
 DISPLAY_BATCH_LOSS    = True
 
@@ -12,7 +12,7 @@ DISPLAY_BATCH_LOSS    = True
 if DATA_SOURCE=='gensim':
     DISPLAY_EVERY_N_BATCH = 1000
     SAVE_EVERY_N_EPOCH    = 1
-    BATCH_SIZE            = 1
+    BATCH_SIZE            = 10
     #BATCH_SIZE = 1024 * 16
     NUM_EPOCHS            = 10
 
@@ -26,8 +26,8 @@ if DATA_SOURCE=='gensim':
     LR                    = 0.001
 
     if FRACTION_DATA == 1:
-        # TEST_WORDS            = ['india', 'computer', 'gold', 'football', 'cars', 'war', 'apple', 'music', 'helicopter']
-        TEST_WORDS = ['horse', 'dog', 'man', 'woman']
+        TEST_WORDS            = ['india', 'computer', 'gold', 'football', 'cars', 'war', 'apple', 'music', 'helicopter']
+        #TEST_WORDS = ['horse', 'dog', 'man', 'woman']
         TEST_WORDS_VIZ        = ['india', 'asia', 'guitar', 'piano', 'album', 'music', 'war', 'soldiers', 'helicopter']
     else:
         TEST_WORDS            = ['human', 'boy', 'office', 'woman']

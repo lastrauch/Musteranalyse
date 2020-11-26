@@ -38,9 +38,9 @@ class img_dataset(Dataset):
 
     def load_data(self, vocab):
         train, test, classes = self.transforming()
-        if os.path.exists("/content/Musteranalyse/venv/model.pt"):
+        if os.path.exists("/content/Musteranalyse/venv/model_15.pt"):
             print('\nloading pickle...')
-            infile = open("/content/Musteranalyse/venv/model.pt",'rb')
+            infile = open("/content/Musteranalyse/venv/model_15.pt",'rb')
             model = pickle.load(infile)
             infile.close()
             print('pickle loaded\n')
@@ -110,7 +110,7 @@ class img_dataset(Dataset):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-        for epoch in range(1):
+        for epoch in range(15):
             print("epoch: ", epoch)
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
@@ -128,8 +128,8 @@ class img_dataset(Dataset):
 
                 running_loss += loss.item()
                 print(running_loss)
-        if not os.path.exists("/content/Musteranalyse/venv/model.pt"):
-            PATH = "/content/Musteranalyse/venv/model.pt"
+        if not os.path.exists("/content/Musteranalyse/venv/model_15.pt"):
+            PATH = "/content/Musteranalyse/venv/model_15.pt"
             # ======== pickle dump =========
             print('\ndumping pickle...')
             outfile = open(PATH, 'wb')
