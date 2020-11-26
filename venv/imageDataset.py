@@ -23,7 +23,7 @@ import pickle
 
 class img_dataset(Dataset):
     def __init__(self, vocab):
-        train, test, classes, inputs, class_names, word_to_img = self.load_data(vocab)
+        train, test, classes, inputs, class_names, word_to_img, model = self.load_data(vocab)
 
         self.train = train
         self.test = test
@@ -31,24 +31,26 @@ class img_dataset(Dataset):
         self.inputs = inputs
         self.class_names = class_names
         self.word_to_img = word_to_img
+        self.model = model
 
     def __len__(self):
         return self.inputs.shape[1]
 
     def load_data(self, vocab):
         train, test, classes = self.transforming()
-        if os.path.exists("/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"):
-            PATH = "/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"
-            device = torch.device('cpu')
-            model = models.resnet34(pretrained=True)
-            model.load_state_dict(torch.load(PATH, map_location=device))
+        if os.path.exists("/content/Musteranalyse/venv/model.pt"):
+            print('\nloading pickle...')
+            infile = open("/content/Musteranalyse/venv/model.pt",'rb')
+            model = pickle.load(infile)
+            infile.close()
+            print('pickle loaded\n')
         else:
             model = self.train_model(train)
         inputs, class_names = next(iter(train))
-        outputs = model(inputs)
+        #outputs = model(inputs)
         word_to_img = self.map_word_to_image(class_names, vocab, classes)
 
-        return train, test, classes, outputs, class_names, word_to_img
+        return train, test, classes, inputs, class_names, word_to_img, model
 
     def transforming(self):
         transform = transforms.Compose([
@@ -59,9 +61,9 @@ class img_dataset(Dataset):
                                  [0.229, 0.224, 0.225])
         ])
         trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform)
-        trainloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=0)
         testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform)
-        testloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0)
+        testloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=0)
         class_names = trainset.classes
 
         return trainloader, testloader, class_names
@@ -108,7 +110,7 @@ class img_dataset(Dataset):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-        for epoch in range(15):
+        for epoch in range(1):
             print("epoch: ", epoch)
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
@@ -126,22 +128,14 @@ class img_dataset(Dataset):
 
                 running_loss += loss.item()
                 print(running_loss)
-        if not os.path.exists("/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"):
-            PATH = "/Users/lstrauch/Documents/Uni/Semester_2/Musteranalyse/EigenesProjekt2/venv/models/model.pt"
+        if not os.path.exists("/content/Musteranalyse/venv/model.pt"):
+            PATH = "/content/Musteranalyse/venv/model.pt"
             # ======== pickle dump =========
             print('\ndumping pickle...')
             outfile = open(PATH, 'wb')
             pickle.dump(model, outfile)
             outfile.close()
             print('pickle dumped\n')
-
-            # else:
-            #     # ===== pickle load ==========
-            #     print('\nloading pickle...')
-            #     infile = open(PREPROCESSED_DATA_PATH, 'rb')
-            #     train_dataset = pickle.load(infile)
-            #     infile.close()
-            #     print('pickle loaded\n')
         print('Finished Training')
         return model
 

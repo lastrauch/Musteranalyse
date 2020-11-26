@@ -28,8 +28,8 @@ corpus = [
     'woman is female',
 ]
 if not os.path.exists(PREPROCESSED_DATA_PATH):
-    train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
-    #train_dataset = word2vec_datasetTest(corpus, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+    #train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+    train_dataset = word2vec_datasetTest(corpus, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
 
     if not os.path.exists(PREPROCESSED_DATA_DIR):
         os.makedirs(PREPROCESSED_DATA_DIR)
@@ -55,16 +55,13 @@ print(vocab)
 test = []
 word_to_ix = train_dataset.word_to_ix
 ix_to_word = train_dataset.ix_to_word
-images = img_dataset(vocab)
-word_2_img = images.word_to_img
+#images = img_dataset(vocab)
+#word_2_img = images.word_to_img
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size = BATCH_SIZE, shuffle = not True)
 
 print('len(train_dataset): ', len(train_dataset))
 print('len(train_loader): ', len(train_loader))
 print('len(vocab): ', len(vocab), '\n')
-print('len(vis_train_dataset): ', len(images))
-print('len(vis_train_loader): ', len(train_vis_loader))
-print('len(vis_vocab): ', len(images.inputs), '\n')
 # ======================================================================================================================
 
 # ==================== make noise distribution to sample negative examples from ========================================
@@ -107,10 +104,10 @@ for epoch in tqdm(range(NUM_EPOCHS)):  # NUM_EPOCHS
             print_nearest_words(model, TEST_WORDS, word_to_ix, ix_to_word, top=2)
 
     # ========================== write embeddings every SAVE_EVERY_N_EPOCH epoch =======================================
-    if epoch % SAVE_EVERY_N_EPOCH == 0:
-        torch.save({'model_state_dict': model.state_dict(),
-                    'losses': losses,
-                    'word_to_ix': word_to_ix,
-                    'ix_to_word': ix_to_word
-                    },
-                   '{}/model{}.pth'.format(MODEL_DIR, epoch))
+    #if epoch % SAVE_EVERY_N_EPOCH == 0:
+        #torch.save({'model_state_dict': model.state_dict(),
+                    #'losses': losses,
+                    #'word_to_ix': word_to_ix,
+                    #'ix_to_word': ix_to_word
+                    #},
+                   #'{}/model{}.pth'.format(MODEL_DIR, epoch))
