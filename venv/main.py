@@ -27,27 +27,27 @@ corpus = [
     'horse is for a woman',
     'woman is female',
 ]
-if not os.path.exists(PREPROCESSED_DATA_PATH):
-    train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+#if not os.path.exists(PREPROCESSED_DATA_PATH):
+train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
     #train_dataset = word2vec_datasetTest(corpus, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
 
-    if not os.path.exists(PREPROCESSED_DATA_DIR):
-        os.makedirs(PREPROCESSED_DATA_DIR)
+    #if not os.path.exists(PREPROCESSED_DATA_DIR):
+        #os.makedirs(PREPROCESSED_DATA_DIR)
 
     # ======== pickle dump =========
-    print('\ndumping pickle...')
-    outfile = open(PREPROCESSED_DATA_PATH,'wb')
-    pickle.dump(train_dataset, outfile)
-    outfile.close()
-    print('pickle dumped\n')
+    #print('\ndumping pickle...')
+    #outfile = open(PREPROCESSED_DATA_PATH,'wb')
+    #pickle.dump(train_dataset, outfile)
+    #outfile.close()
+    #print('pickle dumped\n')
 
-else:
+#else:
     # ===== pickle load ==========
-    print('\nloading pickle...')
-    infile = open(PREPROCESSED_DATA_PATH,'rb')
-    train_dataset = pickle.load(infile)
-    infile.close()
-    print('pickle loaded\n')
+    #print('\nloading pickle...')
+    #infile = open(PREPROCESSED_DATA_PATH,'rb')
+    #train_dataset = pickle.load(infile)
+    #infile.close()
+    #print('pickle loaded\n')
 # ======================================================================================================================
 
 vocab = train_dataset.vocab
