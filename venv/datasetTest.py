@@ -37,10 +37,11 @@ class word2vec_datasetTest(Dataset):
         self.word_to_image = word_to_image
 
     def __getitem__(self, index):
-        x = self.data[index][0]
-        y = self.data[index][1]
-        img = self.data[index][2]
+        x = self.data[index][0].cuda()
+        y = self.data[index][1].cuda()
+        img = self.data[index][2].cuda()
         samples = self.data[index][3]
+        samples = [_sample.cuda() for _sample in samples]
         return x, y, img, samples
 
     def __len__(self):
@@ -52,14 +53,12 @@ class word2vec_datasetTest(Dataset):
 
     def load_data(self, data_source, context_size, fraction_data, subsampling, sampling_rate, k):
         stop_words = set(stopwords.words('english'))
-        bla = "test"
-        #if data_source == 'gensim':
-        if bla == 'test':
+        if data_source == 'gensim':
             import gensim.downloader as api
             dataset = api.load("text8")
             #data = [d for d in dataset][:int(fraction_data * len([d_ for d_ in dataset]))]
             #data = [d for d in dataset][:int(fraction_data * 1)]
-            data = [d for d in dataset][:int(40)]
+            data = [d for d in dataset][:int(5)]
             print(f'fraction of data taken: {fraction_data}/1')
 
             sents = []
@@ -67,8 +66,6 @@ class word2vec_datasetTest(Dataset):
             for d in tqdm(data):
                 sents.append(' '.join(d))
         sent_list_tokenized = [word_tokenize(s) for s in sents]
-        #tokens = [x.split() for x in data_source]
-        #sent_list_tokenized = [word_tokenize(s) for s in data]
         print('len(sent_list_tokenized): ', len(sent_list_tokenized))
         # remove the stopwords
         sent_list_tokenized_filtered = []

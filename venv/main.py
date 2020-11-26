@@ -93,7 +93,7 @@ for epoch in tqdm(range(NUM_EPOCHS)):  # NUM_EPOCHS
         optimizer.zero_grad()
         loss = model(x_batch, y_batch, img, samples)
 
-        loss.backward()
+        loss.backward(retain_graph=True)
         optimizer.step()
 
         losses.append(loss.item())

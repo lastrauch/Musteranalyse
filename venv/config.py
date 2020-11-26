@@ -26,8 +26,8 @@ if DATA_SOURCE=='gensim':
     LR                    = 0.001
 
     if FRACTION_DATA == 1:
-        TEST_WORDS            = ['india', 'computer', 'gold', 'football', 'cars', 'war', 'apple', 'music', 'helicopter']
-        #TEST_WORDS = ['horse', 'dog', 'man', 'woman']
+        #TEST_WORDS            = ['india', 'gold', 'football', 'cars', 'war', 'apple', 'music', 'helicopter']
+        TEST_WORDS = ['horse', 'dog', 'man', 'woman']
         TEST_WORDS_VIZ        = ['india', 'asia', 'guitar', 'piano', 'album', 'music', 'war', 'soldiers', 'helicopter']
     else:
         TEST_WORDS            = ['human', 'boy', 'office', 'woman']
