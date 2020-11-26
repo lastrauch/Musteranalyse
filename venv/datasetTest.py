@@ -83,7 +83,7 @@ class word2vec_datasetTest(Dataset):
         word_2_img = images.word_to_img
         imgModel = images.model
         outputs = imgModel(images.inputs.cuda())
-        training_data = self.gather_training_data(sent_list_tokenized_filtered, word_to_ix, ix_to_word, context_size, images.inputs, word_2_img, k)
+        training_data = self.gather_training_data(sent_list_tokenized_filtered, word_to_ix, ix_to_word, context_size, outputs, word_2_img, k)
         print("return load data")
         return vocab, word_to_ix, ix_to_word, training_data, images, word_2_img
 
