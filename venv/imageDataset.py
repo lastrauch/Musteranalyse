@@ -36,7 +36,7 @@ class img_dataset(Dataset):
         return self.inputs.shape[1]
 
     def load_data(self, vocab):
-        train, test, classes = self.transforming()
+        train, classes = self.transforming()
         if os.path.exists("/content/Musteranalyse/venv/model_15.pt"):
             print('\nloading pickle...')
             infile = open("/content/Musteranalyse/venv/model_15.pt",'rb')
@@ -48,7 +48,7 @@ class img_dataset(Dataset):
         inputs, class_names = next(iter(train))
         word_to_img = self.map_word_to_image(class_names, vocab, classes)
 
-        return train, test, classes, inputs, class_names, word_to_img, model
+        return train, classes, inputs, class_names, word_to_img, model
 
     def transforming(self):
         transform = transforms.Compose([

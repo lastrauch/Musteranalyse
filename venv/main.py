@@ -11,12 +11,6 @@ from imageDataset import img_dataset
 from test import print_nearest_words
 
 
-# ======================================================================================================================
-if os.path.exists(MODEL_DIR):  # remove MODEL_DIR if it exists
-    shutil.rmtree(MODEL_DIR)
-os.makedirs(MODEL_DIR)  # create MODEL_DIR
-# ======================================================================================================================
-
 # ======================================= make training data ===========================================================
 test_corpus = [
     'cat is a female',
@@ -26,7 +20,7 @@ test_corpus = [
     'horse is for a woman',
     'woman is female',
 ]
-train_dataset = word2vec_datasetTest(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
+train_dataset = word2vec_dataset(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
 # ======================================================================================================================
 
 vocab = train_dataset.vocab
