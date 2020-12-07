@@ -74,8 +74,7 @@ class Word2Vec_neg_sampling(nn.Module):
             total_loss = -(out_loss + noise_loss).mean()
             if debug: print('total_loss.shape: ', total_loss.shape)
 
-            if loss_visual is not 0:
-                total_loss = total_loss + loss_visual
+            total_loss = total_loss + loss_visual
 
             return total_loss
 
@@ -92,14 +91,11 @@ class Word2Vec_neg_sampling(nn.Module):
         tmpLoss = 0
         loss = 0
         if img.sum().data != 0:
-            #print("not null=============================================")
             cos_pos = cos(input_word, img)
             for v_n in samples:
                 cos_neg = cos(input_word, v_n)
                 tmpLoss = tmpLoss + cos_neg
             max_loss = cos_pos - cos_neg
             loss = torch.sum(max_loss)
-        #else:
-            #print("-----------------------------------------------null")
         return -loss
 

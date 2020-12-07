@@ -14,15 +14,13 @@ from tqdm import tqdm
 lem = WordNetLemmatizer()
 import random
 from imageDataset import img_dataset
-import numpy as np
 from torch.autograd import Variable
 from torchvision import transforms, datasets, models
 import torch
 from torch.autograd import Variable
-TRAINING_TEXT = "corpus.txt"
 
 
-class word2vec_datasetTest(Dataset):
+class word2vec_dataset(Dataset):
     def __init__(self, DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, k):
 
         print("Parsing text and loading training data...")
@@ -46,51 +44,54 @@ class word2vec_datasetTest(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def tokenize_corpus(self, corpus):
-        tokens = [x.split() for x in corpus]
-        return tokens
-
     def load_data(self, data_source, context_size, fraction_data, subsampling, sampling_rate, k):
         stop_words = set(stopwords.words('english'))
+
         if data_source == 'gensim':
             import gensim.downloader as api
             dataset = api.load("text8")
             #data = [d for d in dataset][:int(fraction_data * len([d_ for d_ in dataset]))]
-            #data = [d for d in dataset][:int(fraction_data * 1)]
-            data = [d for d in dataset][:int(40)]
-            print(f'fraction of data taken: {fraction_data}/1')
+            data = [d for d in dataset][:int(40)] #nur ein Teil der Daten verwenden, da der RAM in Colab nicht ausreicht
 
             sents = []
             print('forming sentences by joining tokenized words...')
             for d in tqdm(data):
                 sents.append(' '.join(d))
+
         sent_list_tokenized = [word_tokenize(s) for s in sents]
         print('len(sent_list_tokenized): ', len(sent_list_tokenized))
+
         # remove the stopwords
         sent_list_tokenized_filtered = []
-        #print('lemmatizing and removing stopwords...')
+
+        print('lemmatizing and removing stopwords...')
         for s in tqdm(sent_list_tokenized):
             sent_list_tokenized_filtered.append([lem.lemmatize(w, 'v') for w in s if w not in stop_words])
-        print(sent_list_tokenized_filtered)
+
         sent_list_tokenized_filtered, vocab, word_to_ix, ix_to_word = self.gather_word_freqs(
             sent_list_tokenized_filtered, subsampling, sampling_rate)
+
         print("Vocab: ", vocab)
         images = img_dataset(vocab)
         word_2_img = images.word_to_img
         imgModel = images.model
         outputs = imgModel(images.inputs.cuda())
+
         training_data = self.gather_training_data(sent_list_tokenized_filtered, word_to_ix, ix_to_word, context_size, outputs, word_2_img, k)
+
         return vocab, word_to_ix, ix_to_word, training_data, images, word_2_img
 
     def gather_training_data(self, tokenized_corpus, word_to_ix, ix_to_word, context_size, images, word_2_img, k):
         idx_pairs = []
+
         # for each sentence
         for i, sentence in enumerate(tokenized_corpus):
             print("Sentence ", i, " out of: ", len(tokenized_corpus))
-            #print("len: ", len(sentence), "sentence: ", sentence)
             indices = [word_to_ix[word] for word in sentence]
+
             # for each word, threated as center word
             for center_word_pos in range(len(indices)):
+
                 # for each window position
                 for w in range(-context_size, context_size + 1):
                     context_word_pos = center_word_pos + w
@@ -98,18 +99,15 @@ class word2vec_datasetTest(Dataset):
                     if context_word_pos < 0 or context_word_pos >= len(indices) or center_word_pos == context_word_pos:
                         continue
                     context_word_idx = indices[context_word_pos]
-                    #print("---t1")
-                    img = torch.zeros(128)
+                    img = torch.zeros(128) #groesse der Bildvektoren
                     samples = self.create_negative_vision(images, k)
                     img_idx = word_2_img[ix_to_word[indices[center_word_pos]]]
                     if img_idx is not None:
                         img = images[img_idx]
                     training_data_center = torch.tensor(indices[center_word_pos], dtype=torch.long)
                     training_data_context = torch.tensor(context_word_idx, dtype=torch.long)
-                    #print("t2")
                     idx_pairs.append((Variable(training_data_center), Variable(training_data_context), Variable(img), samples))
 
-        print("return gather data")
         return idx_pairs
 
     def gather_word_freqs(self, split_text, subsampling, sampling_rate):  # here split_text is sent_list
@@ -145,7 +143,3 @@ class word2vec_datasetTest(Dataset):
 
         print("Done gather frequ")
         return split_text, vocab, word_to_ix, ix_to_word
-
-    def create_negative_vision(self, images, kk):
-        test = random.choices(images, k=kk)
-        return test

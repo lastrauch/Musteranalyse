@@ -23,10 +23,9 @@ import pickle
 
 class img_dataset(Dataset):
     def __init__(self, vocab):
-        train, test, classes, inputs, class_names, word_to_img, model = self.load_data(vocab)
+        train, classes, inputs, class_names, word_to_img, model = self.load_data(vocab)
 
         self.train = train
-        self.test = test
         self.classes = classes
         self.inputs = inputs
         self.class_names = class_names
@@ -47,7 +46,6 @@ class img_dataset(Dataset):
         else:
             model = self.train_model(train)
         inputs, class_names = next(iter(train))
-        #outputs = model(inputs)
         word_to_img = self.map_word_to_image(class_names, vocab, classes)
 
         return train, test, classes, inputs, class_names, word_to_img, model
@@ -62,15 +60,12 @@ class img_dataset(Dataset):
         ])
         trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform)
         trainloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=0)
-        testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform)
-        testloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=0)
         class_names = trainset.classes
 
-        return trainloader, testloader, class_names
+        return trainloader, class_names
 
 
     def img_vocab(self, vocabulary, class_names, inputs, classes):
-        print("ig vocab")
         img_vocabulary = {}
         img_labels = []
         for label, img in zip(class_names, inputs):
@@ -85,7 +80,6 @@ class img_dataset(Dataset):
         temp = []
         for i, label in enumerate(class_names):
             if classes[label] in word_vocab:
-                print("map word: ", classes[label])
                 if classes[label] not in temp:
                     temp.append(classes[label])
                     vocab_positions[classes[label]] = i
