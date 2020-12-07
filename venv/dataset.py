@@ -143,3 +143,7 @@ class word2vec_dataset(Dataset):
 
         print("Done gather frequ")
         return split_text, vocab, word_to_ix, ix_to_word
+
+    def create_negative_vision(self, images, kk):
+        test = random.choices(images, k=kk)
+        return test
