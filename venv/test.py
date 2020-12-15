@@ -25,7 +25,7 @@ def print_nearest_words(model, test_words, word_to_ix, ix_to_word, top=2):
 
 
 if __name__ == '__main__':
-    ckpt = torch.load(os.path.join(MODEL_DIR, 'model0.pth'))
+    ckpt = torch.load(os.path.join(MODEL_DIR, 'model9.pth'))
     ix_to_word = ckpt['ix_to_word']
     word_to_ix = ckpt['word_to_ix']
 
@@ -40,7 +40,8 @@ if __name__ == '__main__':
         return EMBEDDINGS[word_to_ix[word], :]
 
 
-    inp = vec('king') - vec('man') + vec('woman')
+    #inp = vec('king') - vec('man') + vec('woman')
+    inp = vec('horse')
     print('inp.shape: ', inp.shape)
 
     emb_ranking_top, euclidean_dis_top = nearest_word(inp, EMBEDDINGS, top=6)
