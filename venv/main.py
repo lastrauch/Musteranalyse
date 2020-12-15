@@ -20,6 +20,10 @@ test_corpus = [
     'horse is for a woman',
     'woman is female',
 ]
+
+if not os.path.exists(MODEL_DIR):
+    os.makedirs(MODEL_DIR)
+
 train_dataset = word2vec_dataset(DATA_SOURCE, CONTEXT_SIZE, FRACTION_DATA, SUBSAMPLING, SAMPLING_RATE, 1)
 # ======================================================================================================================
 

@@ -35,4 +35,4 @@ if DATA_SOURCE=='gensim':
 PREPROCESSED_DATA_DIR  = os.path.join(MODEL_ID, 'preprocessed_data')
 PREPROCESSED_DATA_PATH = os.path.join(PREPROCESSED_DATA_DIR, 'preprocessed_data_' + MODEL_ID + '_' + str(FRACTION_DATA) + '.pickle')
 SUMMARY_DIR            = os.path.join(MODEL_ID, 'summary')
-MODEL_DIR              = os.path.join(MODEL_ID, 'models2')
+MODEL_DIR              = os.path.join(MODEL_ID, 'models')
